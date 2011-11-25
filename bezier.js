@@ -6,6 +6,9 @@ myNameSpace = function(){
 	var mLineColor = "#fff";
 	var mLineCount = 20;
 	var mLineWidth = 1;
+	
+	var mMouseDown = false;
+	var mShowOptions = false;
 
 	// Start of Public Functions **************************************************************************
 	function init()
@@ -17,11 +20,17 @@ myNameSpace = function(){
 			event.preventDefault();
 		}, false);
 		
+		control.addEventListener('touchstart',showOptions,false);
+		
 		if (navigator.userAgent.indexOf('iPad') != -1 || navigator.userAgent.indexOf('iPhone') != -1 || navigator.userAgent.indexOf('iPod') != -1)
 		{
 			// add touch event listeners
 			layer.addEventListener('touchstart', function(event) {
 				layer.innerHTML="";
+				
+				if (mShowOptions)
+					ShowOptions();
+				
 				canvasTouched(event);
 			}, false);
 			
@@ -31,9 +40,29 @@ myNameSpace = function(){
 		}
 		else
 		{
+			/*
 			layer.addEventListener("click",function(event){
 				layer.innerHTML="";
 				canvasClicked(event);
+			},false);
+			*/
+			
+			layer.addEventListener("mousedown",function(event){
+				layer.innerHTML="";
+				mMouseDown = true;
+				
+				if (mShowOptions)
+					showOptions();
+				
+				canvasClicked(event);
+			},false);
+			
+			layer.addEventListener("mousemove",function(event){
+				canvasClicked(event);
+			},false);
+			
+			layer.addEventListener("mouseup",function(event){
+				mMouseDown = false;
 			},false);
 		}
 	
@@ -52,7 +81,39 @@ myNameSpace = function(){
 		control.style.top = window.innerHeight - control.offsetHeight - 10 + "px";
 		control.style.left = "10px";
 		
+		options.style.left = "10px";
+		mShowOptions = true;
+		showOptions();
+		
 		fillBackground(canvas,mColorCanvas);
+	}
+	
+	function showOptions()
+	{		
+		
+		if (mShowOptions)
+		{
+			options.style.top = window.innerHeight + "px";
+			options.style.opacity = "0";
+			
+			control.innerHTML = "&#9651;";
+			applyOptions();
+		}
+		else
+		{
+			options.style.top = control.offsetTop - options.offsetHeight - 5 + "px";
+			options.style.opacity = "1";
+			
+			control.innerHTML = "&#9661;";
+		}
+		
+		mShowOptions = !mShowOptions;
+		
+	}
+	
+	function exportCanvas()
+	{
+		window.open(canvas.toDataURL("image/png"));
 	}
 	
 	// End of Public Functions ****************************************************************************
@@ -87,27 +148,30 @@ myNameSpace = function(){
 	
 	function canvasClicked(event)
 	{
-		var x, y;
-		
-		// get the mouse position
-		if (event.pageX || event.pageX == 0) // for chrome/safari
+		if (mMouseDown)
 		{
-			x = event.pageX - canvas.offsetLeft;
-			y = event.pageY - canvas.offsetTop;
+			var x, y;
+			
+			// get the mouse position
+			if (event.pageX || event.pageX == 0) // for chrome/safari
+			{
+				x = event.pageX - canvas.offsetLeft;
+				y = event.pageY - canvas.offsetTop;
+			}
+			else if (event.layerX || event.layerX == 0) // for firefox
+			{
+				x = event.layerX;
+				y = event.layerY;
+			}      
+			else if (event.offsetX || event.offsetX == 0) // for opera
+			{
+				x = event.offsetX;
+				y = event.offsetY;
+			}
+			
+			fillBackground(canvas,mColorCanvas);
+			drawBezier(canvas,x,y,-1,-1);
 		}
-		else if (event.layerX || event.layerX == 0) // for firefox
-		{
-			x = event.layerX;
-			y = event.layerY;
-		}      
-		else if (event.offsetX || event.offsetX == 0) // for opera
-		{
-			x = event.offsetX;
-			y = event.offsetY;
-		}
-		
-		fillBackground(canvas,mColorCanvas);
-		drawBezier(canvas,x,y,-1,-1);
 	}
 	
 	function fillBackground(canvas,color)
@@ -171,9 +235,19 @@ myNameSpace = function(){
 		}
 	}
 	
+	function applyOptions()
+	{
+		mLineCount = lineCount.value;
+		mLineWidth = lineWidth.value;
+		mLineColor = lineColor.value;
+		mColorCanvas = backColor.value;
+	}
+	
 	return {
 		init: init,
-		resizeControls: resizeControls
+		resizeControls: resizeControls,
+		showOptions: showOptions,
+		exportCanvas: exportCanvas
 	}
 	
 }();

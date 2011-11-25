@@ -2,6 +2,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Bezier</title>
     <script type="text/javascript" src="bezier.js"></script>
@@ -10,6 +11,47 @@
 <body onload="myNameSpace.init()" onresize="myNameSpace.resizeControls()">
     <canvas id="canvas"></canvas>
     <div id="layer" class="layer">Start by tapping the screen.</div>
-    <div id="control" class="control">&#9651;</div>
+    <div id="control" class="control" onclick="myNameSpace.showOptions()">&#9651;</div>
+	<div id="options" class="options">
+		<table cellpadding="5px">
+		<tr>
+			<td><label for="lineCount">Number of Strokes</label></td>
+			<td>&#8226;</td>
+			<td><input id="lineCount" type="number" min="1" max="25" value="20" /></td>
+		</tr>
+		<tr>
+			<td><label for="lineWidth">Stroke Width</label></td>
+			<td>&#8226;</td>
+			<td><input id="lineWidth" type="number" min="1" max="5" value="1" /></td>
+		</tr>
+		<tr>
+			<td><label for="lineColor">Stroke's Color</label></td>
+			<td>&#8226;</td>
+			<td><select id="lineColor">
+					<option value="#f0ffff" selected="selected">Azure</option>
+					<option value="#7FFF00">Chartreuse</option>
+					<option value="#FFD700">Gold</option>
+					<option value="#40E0D0">Turquoise</option>
+					<option value="#FF6347">Tomato</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td><label for="backColor">Background Color</label></td>
+			<td>&#8226;</td>
+			<td><select id="backColor">
+					<option value="#708090" selected="selected">Slate Gray</option>
+					<option value="#6B8E23">Olive Drab</option>
+					<option value="#8B4513">Saddle Brown</option>
+					<option value="#6495ED">Cornflower Blue</option>
+					<option value="#CD5C5C">Indian Red</option>		
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3" class="center"><input type="button" value="Export >>" onclick="myNameSpace.exportCanvas()" /></td>
+		</tr>
+		</table>
+	</div>
 </body>
 </html>

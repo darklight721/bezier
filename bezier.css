@@ -5,6 +5,8 @@ body
 {
 	padding:0;
 	margin:0;
+	cursor:crosshair;
+	overflow:hidden;
 }
 
 canvas
@@ -39,4 +41,43 @@ canvas
 	background-color:Transparent;
 
 	cursor:default;
+}
+
+.options
+{
+	position:absolute;
+	
+	padding:5px;
+	
+	font-family:helvetica;
+	font-size:0.7em;
+	color:white;
+	
+	background-color:rgba(255,255,255,0.3);
+	border:solid 1px rgba(255,255,255,0.5);
+	
+	opacity:0;
+	
+	-webkit-transition: top 0.5s ease-out, opacity 0.5s ease-out;
+	-o-transition: top 0.5s ease-out, opacity 0.5s ease-out;
+	
+}
+
+td:first-child
+{
+	text-align:right;
+}
+
+
+input,select
+{
+	width:100px;
+	border:solid 1px white;
+	background-color:transparent;
+	
+	font-family:helvetica;
+}
+input
+{
+	color:white;
 }
